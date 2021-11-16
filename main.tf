@@ -225,7 +225,7 @@ resource "aws_route" "public_internet_gateway" {
     create = "5m"
   }
 
-depends_on = [time_sleep.wait_for_internet_gateway]
+  depends_on = [time_sleep.wait_for_internet_gateway]
 
 }
 
@@ -1131,7 +1131,7 @@ resource "aws_route" "private_nat_gateway" {
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
 
   timeouts {
-    create = "5m"
+    create = "7m"
   }
 
   depends_on = [time_sleep.wait_for_nat_gateway]
