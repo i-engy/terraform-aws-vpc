@@ -205,6 +205,11 @@ resource "aws_route_table" "public" {
 
   vpc_id = local.vpc_id
 
+  timeouts {
+    create = "5m"
+    update = "5m"
+  }
+  
   tags = merge(
     {
       "Name" = format("%s-${var.public_subnet_suffix}", var.name)
@@ -223,6 +228,7 @@ resource "aws_route" "public_internet_gateway" {
 
   timeouts {
     create = "5m"
+    update = "5m"
   }
 
   depends_on = [time_sleep.wait_for_internet_gateway]
@@ -246,7 +252,12 @@ resource "aws_route_table" "private" {
   count = var.create_vpc && local.max_subnet_length > 0 ? local.nat_gateway_count : 0
 
   vpc_id = local.vpc_id
-
+  
+  timeouts {
+    create = "5m"
+    update = "5m"
+  }
+  
   tags = merge(
     {
       "Name" = var.single_nat_gateway ? "${var.name}-${var.private_subnet_suffix}" : format(
@@ -269,6 +280,11 @@ resource "aws_route_table" "database" {
 
   vpc_id = local.vpc_id
 
+  timeouts {
+    create = "5m"
+    update = "5m"
+  }
+  
   tags = merge(
     {
       "Name" = var.single_nat_gateway || var.create_database_internet_gateway_route ? "${var.name}-${var.database_subnet_suffix}" : format(
@@ -291,6 +307,7 @@ resource "aws_route" "database_internet_gateway" {
 
   timeouts {
     create = "5m"
+    update = "5m"
   }
 }
 
@@ -303,6 +320,7 @@ resource "aws_route" "database_nat_gateway" {
 
   timeouts {
     create = "5m"
+    update = "5m"
   }
 }
 
@@ -315,6 +333,7 @@ resource "aws_route" "database_ipv6_egress" {
 
   timeouts {
     create = "5m"
+    update = "5m"
   }
 }
 
@@ -345,6 +364,12 @@ resource "aws_route_table" "elasticache" {
 
   vpc_id = local.vpc_id
 
+  
+  timeouts {
+    create = "5m"
+    update = "5m"
+  }
+  
   tags = merge(
     {
       "Name" = "${var.name}-${var.elasticache_subnet_suffix}"
@@ -363,6 +388,11 @@ resource "aws_route_table" "intra" {
 
   vpc_id = local.vpc_id
 
+  timeouts {
+    create = "5m"
+    update = "5m"
+  }
+  
   tags = merge(
     {
       "Name" = "${var.name}-${var.intra_subnet_suffix}"
@@ -1131,7 +1161,8 @@ resource "aws_route" "private_nat_gateway" {
   nat_gateway_id         = element(aws_nat_gateway.this.*.id, count.index)
 
   timeouts {
-    create = "7m"
+    create = "5m"
+    update = "5m"
   }
 
   depends_on = [time_sleep.wait_for_nat_gateway]
